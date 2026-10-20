@@ -4,3 +4,7 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:${DB_PORT}/${DB_NAME}
+
+logging:
+  level:
+    org.springframework.security: TRACE
