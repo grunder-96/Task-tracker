@@ -2,6 +2,7 @@ package org.edu.pet.task_tracker_backend.mapper;
 
 import org.edu.pet.task_tracker_backend.dto.UserInfoResponseDto;
 import org.edu.pet.task_tracker_backend.entity.UserEntity;
+import org.edu.pet.task_tracker_backend.security.CustomUserDetails;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
@@ -9,4 +10,6 @@ import org.mapstruct.MappingConstants;
 public interface UserEntityMapper {
 
     UserInfoResponseDto toUserInfoResponseDto(UserEntity userEntity);
+
+    CustomUserDetails toCustomUserDetails(UserEntity userEntity);
 }
