@@ -1,3 +1,7 @@
 spring:
   application:
     name: task-tracker-backend
+
+  datasource:
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
