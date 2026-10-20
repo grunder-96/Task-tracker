@@ -1,4 +1,4 @@
-package org.edu.pet.task_tracker_backend;
+package org.edu.pet.task_tracker_backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.edu.pet.task_tracker_backend.dto.UserInfoResponseDto;
