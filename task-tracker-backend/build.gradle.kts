@@ -17,6 +17,10 @@ repositories {
 	mavenCentral()
 }
 
+val jjwtVersion = "0.13.0"
+val mapstructVersion = "1.6.3"
+val lombokMapstructBindingVersion = "0.2.0"
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-flyway")
@@ -26,9 +30,9 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
-	implementation("org.mapstruct:mapstruct:1.6.3")
-	implementation("org.projectlombok:lombok-mapstruct-binding:0.2.0")
-	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+	implementation("org.mapstruct:mapstruct:$mapstructVersion")
+	implementation("org.projectlombok:lombok-mapstruct-binding:$lombokMapstructBindingVersion")
+	annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVersion")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-flyway-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-security-test")
@@ -36,6 +40,9 @@ dependencies {
 	testCompileOnly("org.projectlombok:lombok")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testAnnotationProcessor("org.projectlombok:lombok")
+	implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 }
 
 tasks.withType<Test> {
