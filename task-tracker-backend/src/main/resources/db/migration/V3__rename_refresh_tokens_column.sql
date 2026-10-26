@@ -1,0 +1,1 @@
+ALTER TABLE refresh_tokens RENAME COLUMN expired_at TO expires_at;
