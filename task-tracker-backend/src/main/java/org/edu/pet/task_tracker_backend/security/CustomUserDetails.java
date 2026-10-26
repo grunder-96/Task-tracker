@@ -37,26 +37,6 @@ public class CustomUserDetails implements UserDetails, CredentialsContainer {
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return user.isAccountNonExpired();
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return user.isAccountNonLocked();
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return user.isCredentialsNonExpired();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return user.isEnabled();
-    }
-
-    @Override
     public void eraseCredentials() {
         user.eraseCredentials();
     }
