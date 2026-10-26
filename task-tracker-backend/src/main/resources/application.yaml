@@ -13,4 +13,4 @@ app:
   jwt:
     secret: ${JWT_SECRET}
     access-ttl: 2m
-    secret-ttl: 7d
+    refresh-ttl: 7d
