@@ -5,7 +5,7 @@ import org.edu.pet.task_tracker_backend.dto.AuthTokensResponse;
 import org.edu.pet.task_tracker_backend.dto.LoginRequest;
 import org.edu.pet.task_tracker_backend.dto.RegisterRequest;
 import org.edu.pet.task_tracker_backend.repository.RefreshTokenRepository;
-import org.edu.pet.task_tracker_backend.repository.UserEntityRepository;
+import org.edu.pet.task_tracker_backend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
@@ -38,7 +38,7 @@ abstract class AbstractIntegrationTest {
     protected RestTestClient restTestClient;
 
     @Autowired
-    protected UserEntityRepository userRepository;
+    protected UserRepository userRepository;
 
     @Autowired
     protected RefreshTokenRepository refreshTokenRepository;

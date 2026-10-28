@@ -1,8 +1,8 @@
 package org.edu.pet.task_tracker_backend.security;
 
 import lombok.RequiredArgsConstructor;
-import org.edu.pet.task_tracker_backend.mapper.UserEntityMapper;
-import org.edu.pet.task_tracker_backend.repository.UserEntityRepository;
+import org.edu.pet.task_tracker_backend.mapper.UserMapper;
+import org.edu.pet.task_tracker_backend.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,15 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserEntityRepository userEntityRepository;
-    private final UserEntityMapper userEntityMapper;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) {
 
-        return userEntityRepository.findByEmailIgnoreCase(email)
-                .map(userEntityMapper::toCustomUserDetails)
+        return userRepository.findByEmailIgnoreCase(email)
+                .map(userMapper::toCustomUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException("User with email %s not found".formatted(email)));
     }
 }

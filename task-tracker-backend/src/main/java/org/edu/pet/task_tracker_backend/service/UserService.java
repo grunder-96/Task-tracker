@@ -5,8 +5,8 @@ import org.edu.pet.task_tracker_backend.dto.UserInfoResponse;
 import org.edu.pet.task_tracker_backend.entity.UserEntity;
 import org.edu.pet.task_tracker_backend.exception.UserAlreadyTakenException;
 import org.edu.pet.task_tracker_backend.exception.UserNotFoundException;
-import org.edu.pet.task_tracker_backend.mapper.UserEntityMapper;
-import org.edu.pet.task_tracker_backend.repository.UserEntityRepository;
+import org.edu.pet.task_tracker_backend.mapper.UserMapper;
+import org.edu.pet.task_tracker_backend.repository.UserRepository;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -18,13 +18,13 @@ public class UserService {
 
     private static final String EMAIL_UNIQUE_INDEX_NAME = "idx_users_email_lowercase";
 
-    private final UserEntityRepository userEntityRepository;
-    private final UserEntityMapper mapper;
+    private final UserRepository userRepository;
+    private final UserMapper mapper;
 
     @Transactional(readOnly = true)
     public UserInfoResponse getUserInfo(Long userId) {
 
-        return userEntityRepository.findById(userId)
+        return userRepository.findById(userId)
                 .map(mapper::toUserInfoResponseDto)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
@@ -34,7 +34,7 @@ public class UserService {
 
         try {
 
-            UserEntity savedEntity = userEntityRepository.saveAndFlush(userEntity);
+            UserEntity savedEntity = userRepository.saveAndFlush(userEntity);
             return mapper.toUserInfoResponseDto(savedEntity);
         } catch (DataIntegrityViolationException e) {
 
