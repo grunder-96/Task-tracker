@@ -7,7 +7,8 @@ import org.edu.pet.task_tracker_backend.dto.RegisterRequest;
 import org.edu.pet.task_tracker_backend.dto.UserInfoResponse;
 import org.edu.pet.task_tracker_backend.entity.UserEntity;
 import org.edu.pet.task_tracker_backend.security.CustomUserDetails;
-import org.edu.pet.task_tracker_backend.security.JwtTokenProvider;
+import org.edu.pet.task_tracker_backend.security.JwtAccessTokenProvider;
+import org.edu.pet.task_tracker_backend.security.RefreshTokenService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,9 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     private final UserService userService;
-    private final JwtTokenProvider tokenProvider;
+
+    private final JwtAccessTokenProvider accessTokenProvider;
+    private final RefreshTokenService refreshTokenService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -30,9 +33,8 @@ public class AuthService {
         UserEntity userEntity = buildFrom(registerRequest);
 
         UserInfoResponse userInfoResponse = userService.create(userEntity);
-        String accessToken = tokenProvider.generateToken(userInfoResponse.id(), userInfoResponse.email());
-        return new AuthTokensResponse(accessToken);
 
+        return prepareTokensResponse(userInfoResponse.id(), userInfoResponse.email());
     }
 
     public AuthTokensResponse login(LoginRequest loginRequest) {
@@ -42,10 +44,28 @@ public class AuthService {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authenticate.getPrincipal();
 
-        String accessToken = tokenProvider.generateToken(
-                customUserDetails.getId(),  customUserDetails.getUsername());
+        return prepareTokensResponse(customUserDetails.getId(), customUserDetails.getUsername());
+    }
 
-        return new AuthTokensResponse(accessToken);
+    public AuthTokensResponse refresh(String rawRefreshToken) {
+
+        Long userId = refreshTokenService.getUserId(rawRefreshToken);
+
+        UserInfoResponse userInfoResponse = userService.getUserInfo(userId);
+
+        return  prepareTokensResponse(userInfoResponse.id(), userInfoResponse.email());
+    }
+
+    public void logout(String rawRefreshToken) {
+        refreshTokenService.revoke(rawRefreshToken);
+    }
+
+    private AuthTokensResponse prepareTokensResponse(Long userId, String email) {
+
+        String accessToken = accessTokenProvider.generateToken(userId, email);
+        String refreshToken = refreshTokenService.generateToken(userId);
+
+        return new AuthTokensResponse(accessToken, refreshToken);
     }
 
     private UserEntity buildFrom(RegisterRequest registerRequest) {

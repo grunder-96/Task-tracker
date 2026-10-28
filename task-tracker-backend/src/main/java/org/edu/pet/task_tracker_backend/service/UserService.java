@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.edu.pet.task_tracker_backend.dto.UserInfoResponse;
 import org.edu.pet.task_tracker_backend.entity.UserEntity;
 import org.edu.pet.task_tracker_backend.exception.UserAlreadyTakenException;
+import org.edu.pet.task_tracker_backend.exception.UserNotFoundException;
 import org.edu.pet.task_tracker_backend.mapper.UserEntityMapper;
 import org.edu.pet.task_tracker_backend.repository.UserEntityRepository;
 import org.hibernate.exception.ConstraintViolationException;
@@ -19,6 +20,14 @@ public class UserService {
 
     private final UserEntityRepository userEntityRepository;
     private final UserEntityMapper mapper;
+
+    @Transactional(readOnly = true)
+    public UserInfoResponse getUserInfo(Long userId) {
+
+        return userEntityRepository.findById(userId)
+                .map(mapper::toUserInfoResponseDto)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+    }
 
     @Transactional
     UserInfoResponse create(UserEntity userEntity) {

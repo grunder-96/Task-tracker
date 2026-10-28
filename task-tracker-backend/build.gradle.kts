@@ -20,6 +20,7 @@ repositories {
 val jjwtVersion = "0.13.0"
 val mapstructVersion = "1.6.3"
 val lombokMapstructBindingVersion = "0.2.0"
+val testContainersBomVersion = "2.0.5"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -34,6 +35,11 @@ dependencies {
 	implementation("org.mapstruct:mapstruct:$mapstructVersion")
 	implementation("org.projectlombok:lombok-mapstruct-binding:$lombokMapstructBindingVersion")
 	annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVersion")
+	testImplementation("org.springframework.boot:spring-boot-resttestclient")
+	testImplementation(platform("org.testcontainers:testcontainers-bom:$testContainersBomVersion"))
+	testImplementation("org.springframework.boot:spring-boot-testcontainers")
+	testImplementation("org.testcontainers:testcontainers-postgresql")
+	testImplementation("org.testcontainers:testcontainers-junit-jupiter")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-flyway-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-security-test")

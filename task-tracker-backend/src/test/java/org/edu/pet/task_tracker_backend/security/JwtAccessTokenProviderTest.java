@@ -12,14 +12,14 @@ import java.time.Duration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class JwtTokenProviderTest {
+public class JwtAccessTokenProviderTest {
 
     private static final SecretKey KEY = Jwts.SIG.HS256.key().build();
-    private static JwtTokenProvider provider;
+    private static JwtAccessTokenProvider provider;
 
     @BeforeAll
     static void init() {
-        provider = new JwtTokenProvider(KEY, Duration.ofMinutes(3));
+        provider = new JwtAccessTokenProvider(KEY, Duration.ofMinutes(3));
     }
 
     @Test
@@ -36,7 +36,7 @@ public class JwtTokenProviderTest {
     @Test
     void givenExpiredToken_whenGetUserId_thenThrowException() {
         //given
-        JwtTokenProvider expiredProvider = new JwtTokenProvider(KEY, Duration.ofMinutes(-1));
+        JwtAccessTokenProvider expiredProvider = new JwtAccessTokenProvider(KEY, Duration.ofMinutes(-1));
         String expiredToken = expiredProvider.generateToken(12L, "test@gmail.com");
         //when
 
@@ -48,7 +48,7 @@ public class JwtTokenProviderTest {
     void givenAnotherKeySignedToken_whenGetUserId_thenThrowException() {
         //given
         SecretKey anotherKey = Jwts.SIG.HS256.key().build();
-        JwtTokenProvider anotherProvider = new JwtTokenProvider(anotherKey, Duration.ofMinutes(3));
+        JwtAccessTokenProvider anotherProvider = new JwtAccessTokenProvider(anotherKey, Duration.ofMinutes(3));
         String anotherToken = anotherProvider.generateToken(12L, "test@gmail.com");
         //when
 

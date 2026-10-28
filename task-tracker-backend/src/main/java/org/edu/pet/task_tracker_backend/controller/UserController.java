@@ -2,7 +2,6 @@ package org.edu.pet.task_tracker_backend.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.edu.pet.task_tracker_backend.dto.AuthTokensResponse;
 import org.edu.pet.task_tracker_backend.dto.RegisterRequest;
 import org.edu.pet.task_tracker_backend.dto.UserInfoResponse;
 import org.edu.pet.task_tracker_backend.security.CustomUserDetails;
@@ -22,6 +21,8 @@ public class UserController {
 
     private final AuthService authService;
 
+    private final AuthResponseFactory authResponseFactory;
+
     @GetMapping
     public UserInfoResponse getUserInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return new UserInfoResponse(customUserDetails.getId(), customUserDetails.getUsername());
@@ -29,10 +30,6 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequest registerRequest) {
-
-        AuthTokensResponse tokensResponse = authService.register(registerRequest);
-        return ResponseEntity.ok()
-                .headers(AuthHeaderUtils.buildAuthHeaders(tokensResponse))
-                .build();
+        return authResponseFactory.ok(authService.register(registerRequest));
     }
 }

@@ -21,7 +21,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final String AUTH_HEADER_PREFIX = "Bearer ";
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAccessTokenProvider accessTokenProvider;
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String token = header.substring(AUTH_HEADER_PREFIX.length());
 
                 CustomUserDetails customUserDetails = (CustomUserDetails) userDetailsService
-                        .loadUserByUsername(jwtTokenProvider.getEmail(token));
+                        .loadUserByUsername(accessTokenProvider.getEmail(token));
 
                 customUserDetails.eraseCredentials();
 

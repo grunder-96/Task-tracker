@@ -1,6 +1,9 @@
 package org.edu.pet.task_tracker_backend.advice;
 
+import lombok.RequiredArgsConstructor;
+import org.edu.pet.task_tracker_backend.controller.RefreshCookieFactory;
 import org.edu.pet.task_tracker_backend.dto.ErrorResponse;
+import org.edu.pet.task_tracker_backend.exception.InvalidRefreshTokenException;
 import org.edu.pet.task_tracker_backend.exception.UserAlreadyTakenException;
 import org.edu.pet.task_tracker_backend.exception.UserNotFoundException;
 import org.jspecify.annotations.Nullable;
@@ -21,7 +24,10 @@ import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private final RefreshCookieFactory refreshCookieFactory;
 
     @ExceptionHandler(UserAlreadyTakenException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -39,6 +45,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleBadCredentialsException(BadCredentialsException e) {
         return new ErrorResponse("Invalid email or password");
+    }
+
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidRefreshTokenException(InvalidRefreshTokenException e) {
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .header(HttpHeaders.SET_COOKIE, refreshCookieFactory.clear().toString())
+                .body(new ErrorResponse(e.getMessage()));
     }
 
     @Override

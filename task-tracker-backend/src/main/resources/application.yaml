@@ -14,3 +14,8 @@ app:
     secret: ${JWT_SECRET}
     access-ttl: 2m
     refresh-ttl: 7d
+    refresh-cookie-secure: false
+
+  cleanup-tokens:
+    initial-delay-hours: 1
+    fixed-rate-hours: 1

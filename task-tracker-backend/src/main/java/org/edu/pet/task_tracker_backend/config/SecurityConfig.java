@@ -2,7 +2,7 @@ package org.edu.pet.task_tracker_backend.config;
 
 import lombok.RequiredArgsConstructor;
 import org.edu.pet.task_tracker_backend.security.JwtAuthenticationFilter;
-import org.edu.pet.task_tracker_backend.security.JwtTokenProvider;
+import org.edu.pet.task_tracker_backend.security.JwtAccessTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,12 +26,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAccessTokenProvider accessTokenProvider;
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService);
+        return new JwtAuthenticationFilter(accessTokenProvider, userDetailsService);
     }
 
     @Bean
@@ -54,7 +54,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/user",
-                                "/auth/login")
+                                "/auth/login",
+                                "/auth/refresh",
+                                "/auth/logout")
                         .permitAll()
                         .anyRequest().authenticated())
 

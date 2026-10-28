@@ -3,7 +3,7 @@ package org.edu.pet.task_tracker_backend.config;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
-import org.edu.pet.task_tracker_backend.security.JwtTokenProvider;
+import org.edu.pet.task_tracker_backend.security.JwtAccessTokenProvider;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +18,9 @@ public class JwtConfig {
     private final JwtProperties jwtProperties;
 
     @Bean
-    public JwtTokenProvider jwtTokenProvider() {
+    public JwtAccessTokenProvider jwtAccessTokenProvider() {
 
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.secret()));
-        return new JwtTokenProvider(key, jwtProperties.accessTtl());
+        return new JwtAccessTokenProvider(key, jwtProperties.accessTtl());
     }
 }

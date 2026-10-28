@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.Date;
 
 @RequiredArgsConstructor
-public class JwtTokenProvider {
+public class JwtAccessTokenProvider {
 
     private final SecretKey secretKey;
     private final Duration accessTokenTtl;
