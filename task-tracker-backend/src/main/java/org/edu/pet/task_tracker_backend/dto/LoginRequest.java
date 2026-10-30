@@ -15,6 +15,6 @@ public record LoginRequest(
         String password) {
 
         public LoginRequest {
-            email = EmailNormalizer.normalize(email);
+            email = StringNormalizer.strip(email);
         }
 }

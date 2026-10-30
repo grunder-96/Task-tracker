@@ -17,6 +17,6 @@ public record RegisterRequest(
 ) {
 
     public RegisterRequest {
-        email = EmailNormalizer.normalize(email);
+        email = StringNormalizer.strip(email);
     }
 }

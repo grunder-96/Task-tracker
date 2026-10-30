@@ -1,11 +1,13 @@
 package org.edu.pet.task_tracker_backend.advice;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.edu.pet.task_tracker_backend.controller.RefreshCookieFactory;
 import org.edu.pet.task_tracker_backend.dto.ErrorResponse;
 import org.edu.pet.task_tracker_backend.exception.InvalidRefreshTokenException;
 import org.edu.pet.task_tracker_backend.exception.UserAlreadyTakenException;
 import org.edu.pet.task_tracker_backend.exception.UserNotFoundException;
+import org.edu.pet.task_tracker_backend.exception.UserTaskNotFoundException;
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
+@Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final RefreshCookieFactory refreshCookieFactory;
@@ -35,9 +38,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
+    @ExceptionHandler({UserNotFoundException.class, UserTaskNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleUserNotFoundException(UserNotFoundException e) {
+    public ErrorResponse handleUserNotFoundException(RuntimeException e) {
         return new ErrorResponse(e.getMessage());
     }
 
@@ -74,5 +77,37 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(status)
                 .headers(headers)
                 .body(errorResponse);
+    }
+
+    @Override
+    protected @Nullable ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+
+        String message;
+
+        if (statusCode.is5xxServerError()) {
+
+            log.error("Unhandled server error", ex);
+            message = getReasonPhrase(statusCode);
+        } else {
+
+            message = ex instanceof org.springframework.web.ErrorResponse errorResponse && errorResponse.getBody().getDetail() != null ?
+                errorResponse.getBody().getDetail() : getReasonPhrase(statusCode);
+        }
+
+        return ResponseEntity
+                .status(statusCode)
+                .headers(headers)
+                .body(new ErrorResponse(message));
+    }
+
+    private String getReasonPhrase(HttpStatusCode status) {
+
+        HttpStatus httpStatus = HttpStatus.resolve(status.value());
+
+        if (httpStatus != null) {
+            return httpStatus.getReasonPhrase();
+        }
+
+        return status.is5xxServerError() ? "Internal server error" : "error";
     }
 }

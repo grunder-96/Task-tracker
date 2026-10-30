@@ -3,14 +3,14 @@ package org.edu.pet.task_tracker_backend.dto;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class EmailNormalizer {
+public class StringNormalizer {
 
-    String normalize(String email){
+    public String strip(String value){
 
-        if (email == null) {
+        if (value == null) {
             return null;
         }
 
-        return email.trim();
+        return value.strip();
     }
 }

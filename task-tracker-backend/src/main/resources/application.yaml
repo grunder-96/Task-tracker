@@ -12,7 +12,7 @@ spring:
 app:
   jwt:
     secret: ${JWT_SECRET}
-    access-ttl: 2m
+    access-ttl: 5m
     refresh-ttl: 7d
     refresh-cookie-secure: false
 
