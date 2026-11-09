@@ -2,6 +2,16 @@ spring:
   application:
     name: task-tracker-backend
 
+  kafka:
+    bootstrap-servers:
+      - ${KAFKA_EXTERNAL_HOST}:${KAFKA_EXTERNAL_PORT}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+      properties:
+        "[max.block.ms]": 2000
+        "[spring.json.add.type.headers]": false
+
   datasource:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
@@ -19,3 +29,6 @@ app:
   cleanup-tokens:
     initial-delay-hours: 1
     fixed-rate-hours: 1
+
+  kafka:
+    email-sending-topic-name: ${KAFKA_EMAIL_SENDING_TOPIC}

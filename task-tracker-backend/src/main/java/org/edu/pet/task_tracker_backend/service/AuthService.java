@@ -20,12 +20,9 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final AuthenticationManager authenticationManager;
-
     private final UserService userService;
-
     private final JwtAccessTokenProvider accessTokenProvider;
     private final RefreshTokenService refreshTokenService;
-
     private final PasswordEncoder passwordEncoder;
 
     public AuthTokensResponse register(RegisterRequest registerRequest) {
@@ -53,7 +50,7 @@ public class AuthService {
 
         UserInfoResponse userInfoResponse = userService.getUserInfo(userId);
 
-        return  prepareTokensResponse(userInfoResponse.id(), userInfoResponse.email());
+        return prepareTokensResponse(userInfoResponse.id(), userInfoResponse.email());
     }
 
     public void logout(String rawRefreshToken) {

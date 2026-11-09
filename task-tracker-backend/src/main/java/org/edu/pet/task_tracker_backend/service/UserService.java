@@ -3,11 +3,13 @@ package org.edu.pet.task_tracker_backend.service;
 import lombok.RequiredArgsConstructor;
 import org.edu.pet.task_tracker_backend.dto.UserInfoResponse;
 import org.edu.pet.task_tracker_backend.entity.UserEntity;
+import org.edu.pet.task_tracker_backend.event.UserRegisteredEvent;
 import org.edu.pet.task_tracker_backend.exception.UserAlreadyTakenException;
 import org.edu.pet.task_tracker_backend.exception.UserNotFoundException;
 import org.edu.pet.task_tracker_backend.mapper.UserMapper;
 import org.edu.pet.task_tracker_backend.repository.UserRepository;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +20,10 @@ public class UserService {
 
     private static final String EMAIL_UNIQUE_INDEX_NAME = "idx_users_email_lowercase";
 
+    private final ApplicationEventPublisher eventPublisher;
     private final UserRepository userRepository;
     private final UserMapper mapper;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional(readOnly = true)
     public UserInfoResponse getUserInfo(Long userId) {
@@ -32,10 +36,15 @@ public class UserService {
     @Transactional
     UserInfoResponse create(UserEntity userEntity) {
 
-        try {
+        UserEntity saved = save(userEntity);
+        eventPublisher.publishEvent(new UserRegisteredEvent(saved.getEmail()));
+        return mapper.toUserInfoResponseDto(saved);
+    }
 
-            UserEntity savedEntity = userRepository.saveAndFlush(userEntity);
-            return mapper.toUserInfoResponseDto(savedEntity);
+    private UserEntity save(UserEntity userEntity) {
+
+        try {
+            return userRepository.save(userEntity);
         } catch (DataIntegrityViolationException e) {
 
             if (isEmailUniqueViolation(e)) {

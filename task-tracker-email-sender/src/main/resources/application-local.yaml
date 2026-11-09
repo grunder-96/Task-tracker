@@ -1,0 +1,9 @@
+spring:
+  config:
+    import: "file:.env[.properties]"
+
+logging:
+  level:
+    org.springframework.kafka: DEBUG
+    org.apache.kafka: WARN
+    org.springframework.kafka.listener.DefaultErrorHandler: TRACE

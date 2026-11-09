@@ -1,0 +1,6 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:1
+app:
+  kafka:
+    email-sending-topic-name: email-sending-test

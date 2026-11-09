@@ -1,0 +1,38 @@
+spring:
+  mail:
+    host: ${SENDER_SERVER_HOST}
+    port: ${SENDER_SERVER_PORT}
+    username: ${SENDER_SERVER_LOGIN}
+    password: ${SENDER_SERVER_PASSWORD}
+    properties:
+      "[mail.smtp.auth]": ${SENDER_SMTP_AUTH}
+      "[mail.smtp.starttls.enable]": ${SENDER_SMTP_STARTTLS}
+      "[mail.smtp.starttls.required]": ${SENDER_SMTP_STARTTLS}
+      "[mail.smtp.connectiontimeout]": 5000
+      "[mail.smtp.timeout]": 10000
+      "[mail.smtp.writetimeout]": 10000
+
+  application:
+    name: task-tracker-email-sender
+
+  kafka:
+    listener:
+      missing-topics-fatal: true
+    bootstrap-servers:
+      - ${KAFKA_EXTERNAL_HOST}:${KAFKA_EXTERNAL_PORT}
+    consumer:
+      group-id: email-sender
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        "[spring.deserializer.value.delegate.class]": org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+        "[spring.deserializer.validator.class]": org.edu.pet.task_tracker_email_sender.validation.CustomValidator
+        "[spring.json.use.type.headers]": false
+        "[spring.json.value.default.type]": org.edu.pet.task_tracker_email_sender.event.EmailSendingEvent
+
+app:
+  mail:
+    from: ${SENDER_FROM_EMAIL}
+  kafka:
+    email-sending-topic-name: ${KAFKA_EMAIL_SENDING_TOPIC}

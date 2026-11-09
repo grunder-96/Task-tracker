@@ -14,8 +14,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.client.ExchangeResult;
 import org.springframework.test.web.servlet.client.RestTestClient;
 
@@ -27,12 +30,16 @@ import java.util.HexFormat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 @Import(DatabaseTestConfiguration.class)
 @AutoConfigureRestTestClient
 abstract class AbstractIntegrationTest {
 
     protected static final String JWT_SECRET = "xvRwGbjlQwE1bK7rl9aXqtkvkXmSTBSOmXsvLI5z3IQ=";
     protected static final String PASSWORD = "Qwe12345!";
+
+    @MockitoBean
+    protected KafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
     protected RestTestClient restTestClient;
