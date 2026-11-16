@@ -1,0 +1,43 @@
+spring:
+
+  application:
+    name: task-tracker-summarization-server
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  datasource:
+    username: ${SUMMARIZATION_DB_USER}
+    password: ${SUMMARIZATION_DB_PASSWORD}
+
+  http:
+    clients:
+      connect-timeout: 5s
+      read-timeout: 30s
+
+  kafka:
+    listener:
+      missing-topics-fatal: true
+    bootstrap-servers:
+      - ${KAFKA_EXTERNAL_HOST}:${KAFKA_EXTERNAL_PORT}
+    consumer:
+      group-id: summarization-server
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        "[spring.deserializer.value.delegate.class]": org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+        "[spring.json.use.type.headers]": false
+        "[spring.json.value.default.type]": org.edu.pet.task_tracker_summarization_server.dto.SummarizationRequest
+
+app:
+  llm:
+    auth-key: ${LLM_AUTH_KEY}
+    auth-url: ${LLM_AUTH_URL}
+    api-base-url: ${LLM_API_BASE_URL}
+    model-name: ${LLM_MODEL_NAME}
+  kafka:
+    summarization:
+      requests-topic-name: ${KAFKA_SUMMARIZATION_REQUESTS_TOPIC}
+      responses-topic-name: ${KAFKA_SUMMARIZATION_RESPONSES_TOPIC}

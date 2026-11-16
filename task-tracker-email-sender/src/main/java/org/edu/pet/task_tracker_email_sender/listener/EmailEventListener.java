@@ -12,7 +12,7 @@ public class EmailEventListener {
 
     private final EmailSendingService emailSendingService;
 
-    @KafkaListener(topics = "${app.kafka.email-sending-topic-name}")
+    @KafkaListener(topics = "${app.kafka.email.sending-topic-name}")
     public void listen(EmailSendingEvent event) {
         emailSendingService.sendEmail(event);
     }

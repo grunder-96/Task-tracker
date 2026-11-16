@@ -7,10 +7,14 @@ services:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      SUMMARIZATION_DB_NAME: ${SUMMARIZATION_DB_NAME}
+      SUMMARIZATION_DB_USER: ${SUMMARIZATION_DB_USER}
+      SUMMARIZATION_DB_PASSWORD: ${SUMMARIZATION_DB_PASSWORD}
     ports:
       - "127.0.0.1:${DB_PORT}:5432"
     volumes:
       - db_data:/var/lib/postgresql
+      - ./init-summarization-db.sh:/docker-entrypoint-initdb.d/init-summarization-db.sh:ro
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
       interval: 10s

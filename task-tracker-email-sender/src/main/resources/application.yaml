@@ -35,4 +35,5 @@ app:
   mail:
     from: ${SENDER_FROM_EMAIL}
   kafka:
-    email-sending-topic-name: ${KAFKA_EMAIL_SENDING_TOPIC}
+    email:
+      sending-topic-name: ${KAFKA_EMAIL_SENDING_TOPIC}

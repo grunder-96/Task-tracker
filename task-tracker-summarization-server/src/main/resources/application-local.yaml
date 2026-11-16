@@ -1,0 +1,12 @@
+spring:
+  config:
+    import: "file:.env[.properties]"
+
+  datasource:
+    url: jdbc:postgresql://localhost:${DB_PORT}/${SUMMARIZATION_DB_NAME}
+
+logging:
+  level:
+    org.springframework.kafka: DEBUG
+    org.apache.kafka: WARN
+    org.springframework.kafka.listener.DefaultErrorHandler: TRACE

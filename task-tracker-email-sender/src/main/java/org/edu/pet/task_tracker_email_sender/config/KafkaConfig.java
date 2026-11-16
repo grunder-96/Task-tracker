@@ -31,7 +31,7 @@ public class KafkaConfig {
     private static final String DLT_TOPIC_SUFFIX = "-dlt";
 
     @Bean
-    public NewTopic emailSendingTopic(@Value("${app.kafka.email-sending-topic-name}") String emailSendingTopicName) {
+    public NewTopic emailSendingTopic(@Value("${app.kafka.email.sending-topic-name}") String emailSendingTopicName) {
 
         return TopicBuilder
                 .name(emailSendingTopicName)
@@ -41,7 +41,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public NewTopic emailSendingDltTopic(@Value("${app.kafka.email-sending-topic-name}") String emailSendingTopicName) {
+    public NewTopic emailSendingDltTopic(@Value("${app.kafka.email.sending-topic-name}") String emailSendingTopicName) {
 
         return TopicBuilder
                 .name(emailSendingTopicName + DLT_TOPIC_SUFFIX)
