@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  kafka:
+    bootstrap-servers:
+      - ${KAFKA_EXTERNAL_HOST}:${KAFKA_EXTERNAL_PORT}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+      properties:
+        "[max.block.ms]": 2000
+        "[spring.json.add.type.headers]": false
+    consumer:
+      group-id: scheduler
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        "[spring.deserializer.value.delegate.class]": org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+        "[spring.json.use.type.headers]": false
+        "[spring.json.value.default.type]": org.edu.pet.task_tracker_scheduler.dto.SummarizationResponse
+
+app:
+  kafka:
+    summarization:
+      requests-topic-name: ${KAFKA_SUMMARIZATION_REQUESTS_TOPIC}
+      responses-topic-name: ${KAFKA_SUMMARIZATION_RESPONSES_TOPIC}
+      email-sending-topic-name: ${KAFKA_EMAIL_SENDING_TOPIC}
+      reply-timeout: 60s
+  scheduler:
+    cron: 0 0 0 * * *

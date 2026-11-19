@@ -1,10 +1,10 @@
-package org.edu.pet.task_tracker_email_sender.event;
+package org.edu.pet.task_tracker_email_sender.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-public record EmailSendingEvent(
+public record EmailMessage(
 
         @NotBlank
         @Email

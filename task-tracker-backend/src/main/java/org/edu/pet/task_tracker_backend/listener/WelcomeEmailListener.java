@@ -15,6 +15,6 @@ public class WelcomeEmailListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
     public void onUserRegistered(UserRegisteredEvent event) {
-        notifier.sendWelcome(event.email());
+        notifier.sendWelcome(event.userId(), event.email());
     }
 }

@@ -2,8 +2,8 @@ package org.edu.pet.task_tracker_backend.controller;
 
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.edu.pet.task_tracker_backend.dto.AuthTokensResponse;
-import org.edu.pet.task_tracker_backend.dto.UserInfoResponse;
+import org.edu.pet.task_tracker_backend.dto.auth.AuthTokensResponse;
+import org.edu.pet.task_tracker_backend.dto.auth.UserInfoResponse;
 import org.edu.pet.task_tracker_backend.entity.RefreshTokenEntity;
 import org.edu.pet.task_tracker_backend.entity.UserEntity;
 import org.edu.pet.task_tracker_backend.security.JwtAccessTokenProvider;

@@ -1,9 +1,8 @@
 package org.edu.pet.task_tracker_backend.controller;
 
-import com.sun.net.httpserver.Headers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.edu.pet.task_tracker_backend.dto.LoginRequest;
+import org.edu.pet.task_tracker_backend.dto.auth.LoginRequest;
 import org.edu.pet.task_tracker_backend.service.AuthService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;

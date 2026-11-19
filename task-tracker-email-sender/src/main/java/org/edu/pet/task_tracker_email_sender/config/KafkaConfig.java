@@ -4,7 +4,7 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.edu.pet.task_tracker_email_sender.event.EmailSendingEvent;
+import org.edu.pet.task_tracker_email_sender.dto.EmailMessage;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.kafka.autoconfigure.KafkaProperties;
@@ -60,7 +60,7 @@ public class KafkaConfig {
             new StringSerializer(),
             new DelegatingByTypeSerializer(Map.of(
                 byte[].class, new ByteArraySerializer(),
-                EmailSendingEvent.class, new JacksonJsonSerializer<>()))
+                EmailMessage.class, new JacksonJsonSerializer<>()))
         );
     }
 

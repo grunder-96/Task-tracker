@@ -1,8 +1,9 @@
-package org.edu.pet.task_tracker_backend.dto;
+package org.edu.pet.task_tracker_backend.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.edu.pet.task_tracker_backend.dto.StringNormalizer;
 
 public record LoginRequest(
 

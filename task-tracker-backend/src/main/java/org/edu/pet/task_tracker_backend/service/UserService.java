@@ -1,7 +1,7 @@
 package org.edu.pet.task_tracker_backend.service;
 
 import lombok.RequiredArgsConstructor;
-import org.edu.pet.task_tracker_backend.dto.UserInfoResponse;
+import org.edu.pet.task_tracker_backend.dto.auth.UserInfoResponse;
 import org.edu.pet.task_tracker_backend.entity.UserEntity;
 import org.edu.pet.task_tracker_backend.event.UserRegisteredEvent;
 import org.edu.pet.task_tracker_backend.exception.UserAlreadyTakenException;
@@ -37,7 +37,7 @@ public class UserService {
     UserInfoResponse create(UserEntity userEntity) {
 
         UserEntity saved = save(userEntity);
-        eventPublisher.publishEvent(new UserRegisteredEvent(saved.getEmail()));
+        eventPublisher.publishEvent(new UserRegisteredEvent(saved.getId(), saved.getEmail()));
         return mapper.toUserInfoResponseDto(saved);
     }
 

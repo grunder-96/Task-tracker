@@ -1,9 +1,9 @@
 package org.edu.pet.task_tracker_backend.controller;
 
 import org.edu.pet.task_tracker_backend.config.DatabaseTestConfiguration;
-import org.edu.pet.task_tracker_backend.dto.AuthTokensResponse;
-import org.edu.pet.task_tracker_backend.dto.LoginRequest;
-import org.edu.pet.task_tracker_backend.dto.RegisterRequest;
+import org.edu.pet.task_tracker_backend.dto.auth.AuthTokensResponse;
+import org.edu.pet.task_tracker_backend.dto.auth.LoginRequest;
+import org.edu.pet.task_tracker_backend.dto.auth.RegisterRequest;
 import org.edu.pet.task_tracker_backend.repository.RefreshTokenRepository;
 import org.edu.pet.task_tracker_backend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;

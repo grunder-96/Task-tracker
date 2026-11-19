@@ -1,10 +1,10 @@
 package org.edu.pet.task_tracker_backend.service;
 
 import lombok.RequiredArgsConstructor;
-import org.edu.pet.task_tracker_backend.dto.AuthTokensResponse;
-import org.edu.pet.task_tracker_backend.dto.LoginRequest;
-import org.edu.pet.task_tracker_backend.dto.RegisterRequest;
-import org.edu.pet.task_tracker_backend.dto.UserInfoResponse;
+import org.edu.pet.task_tracker_backend.dto.auth.AuthTokensResponse;
+import org.edu.pet.task_tracker_backend.dto.auth.LoginRequest;
+import org.edu.pet.task_tracker_backend.dto.auth.RegisterRequest;
+import org.edu.pet.task_tracker_backend.dto.auth.UserInfoResponse;
 import org.edu.pet.task_tracker_backend.entity.UserEntity;
 import org.edu.pet.task_tracker_backend.security.CustomUserDetails;
 import org.edu.pet.task_tracker_backend.security.JwtAccessTokenProvider;

@@ -1,6 +1,6 @@
 package org.edu.pet.task_tracker_backend.controller;
 
-import org.edu.pet.task_tracker_backend.dto.AuthTokensResponse;
+import org.edu.pet.task_tracker_backend.dto.auth.AuthTokensResponse;
 import org.edu.pet.task_tracker_backend.entity.RefreshTokenEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -1,7 +1,7 @@
 package org.edu.pet.task_tracker_backend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.edu.pet.task_tracker_backend.dto.AuthTokensResponse;
+import org.edu.pet.task_tracker_backend.dto.auth.AuthTokensResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

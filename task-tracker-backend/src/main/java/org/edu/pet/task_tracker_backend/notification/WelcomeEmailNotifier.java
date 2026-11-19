@@ -1,8 +1,8 @@
 package org.edu.pet.task_tracker_backend.notification;
 
 import lombok.RequiredArgsConstructor;
-import org.edu.pet.task_tracker_backend.event.EmailEventPublisher;
-import org.edu.pet.task_tracker_backend.event.EmailSendingEvent;
+import org.edu.pet.task_tracker_backend.dto.EmailMessage;
+import org.edu.pet.task_tracker_backend.service.EmailMessagePublisher;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,9 +16,9 @@ public class WelcomeEmailNotifier {
             You can now create tasks and track their progress.
             """;
 
-    private final EmailEventPublisher publisher;
+    private final EmailMessagePublisher publisher;
 
-    public void sendWelcome(String email) {
-        publisher.publish(new EmailSendingEvent(email, SUBJECT, BODY));
+    public void sendWelcome(Long userId, String email) {
+        publisher.publish(userId, new EmailMessage(email, SUBJECT, BODY));
     }
 }

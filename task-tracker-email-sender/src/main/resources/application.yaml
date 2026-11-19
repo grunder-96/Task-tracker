@@ -29,7 +29,7 @@ spring:
         "[spring.deserializer.value.delegate.class]": org.springframework.kafka.support.serializer.JacksonJsonDeserializer
         "[spring.deserializer.validator.class]": org.edu.pet.task_tracker_email_sender.validation.CustomValidator
         "[spring.json.use.type.headers]": false
-        "[spring.json.value.default.type]": org.edu.pet.task_tracker_email_sender.event.EmailSendingEvent
+        "[spring.json.value.default.type]": org.edu.pet.task_tracker_email_sender.dto.EmailMessage
 
 app:
   mail:

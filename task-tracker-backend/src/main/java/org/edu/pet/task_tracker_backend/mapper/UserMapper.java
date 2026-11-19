@@ -1,6 +1,6 @@
 package org.edu.pet.task_tracker_backend.mapper;
 
-import org.edu.pet.task_tracker_backend.dto.UserInfoResponse;
+import org.edu.pet.task_tracker_backend.dto.auth.UserInfoResponse;
 import org.edu.pet.task_tracker_backend.entity.UserEntity;
 import org.edu.pet.task_tracker_backend.security.CustomUserDetails;
 import org.mapstruct.Mapper;
