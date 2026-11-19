@@ -23,7 +23,6 @@ public class UserService {
     private final ApplicationEventPublisher eventPublisher;
     private final UserRepository userRepository;
     private final UserMapper mapper;
-    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional(readOnly = true)
     public UserInfoResponse getUserInfo(Long userId) {
