@@ -3,7 +3,7 @@ package org.edu.pet.task_tracker_scheduler.service;
 import lombok.RequiredArgsConstructor;
 import org.edu.pet.task_tracker_scheduler.config.AppKafkaProperties;
 import org.edu.pet.task_tracker_scheduler.dto.EmailMessage;
-import org.edu.pet.task_tracker_scheduler.exception.SummarizationServiceUnavailableException;
+import org.edu.pet.task_tracker_scheduler.exception.EmailSendingException;
 import org.edu.pet.task_tracker_scheduler.model.User;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -35,9 +35,9 @@ public class KafkaEmailSendingService {
 
             //restore interrupt status
             Thread.currentThread().interrupt();
-            throw new SummarizationServiceUnavailableException("Interrupted while sending email message for user " + user.id(), e);
+            throw new EmailSendingException("Interrupted while sending email message for user " + user.id(), e);
         } catch (ExecutionException | TimeoutException e) {
-            throw new SummarizationServiceUnavailableException("Email message for user " + user.id() + " was not delivered to Kafka", e);
+            throw new EmailSendingException("Email message for user " + user.id() + " was not delivered to Kafka", e);
         }
     }
 }
