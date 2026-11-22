@@ -1,0 +1,20 @@
+name: Publish scheduler docker image
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'task-tracker-scheduler/**'
+
+jobs:
+  call-common-docker-publish-workflow:
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+    uses: ./.github/workflows/common-docker-publish-workflow.yml
+    with:
+      service_name: task-tracker-scheduler
+    secrets: inherit

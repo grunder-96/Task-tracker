@@ -1,0 +1,33 @@
+name: Publish backend docker image
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'task-tracker-backend/**'
+
+jobs:
+  test:
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+      - name: Run tests
+        working-directory: ./task-tracker-backend
+        run: ./gradlew test --no-daemon
+
+  call-common-docker-publish-workflow:
+    needs: test
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+    uses: ./.github/workflows/common-docker-publish-workflow.yml
+    with:
+      service_name: task-tracker-backend
+    secrets: inherit
