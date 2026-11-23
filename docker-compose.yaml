@@ -7,6 +7,7 @@ services:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      # used by init-summarization-db.sh to create the summarization database
       SUMMARIZATION_DB_NAME: ${SUMMARIZATION_DB_NAME}
       SUMMARIZATION_DB_USER: ${SUMMARIZATION_DB_USER}
       SUMMARIZATION_DB_PASSWORD: ${SUMMARIZATION_DB_PASSWORD}

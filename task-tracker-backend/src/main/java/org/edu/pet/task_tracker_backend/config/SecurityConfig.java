@@ -1,8 +1,8 @@
 package org.edu.pet.task_tracker_backend.config;
 
 import lombok.RequiredArgsConstructor;
-import org.edu.pet.task_tracker_backend.security.JwtAuthenticationFilter;
 import org.edu.pet.task_tracker_backend.security.JwtAccessTokenProvider;
+import org.edu.pet.task_tracker_backend.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -51,6 +51,14 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/",
+                                "/index.html",
+                                "/app.js",
+                                "/style.css",
+                                "/favicon.ico")
+                        .permitAll()
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/user",

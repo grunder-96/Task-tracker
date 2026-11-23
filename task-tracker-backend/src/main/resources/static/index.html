@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Планировщик задач</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Планировщик задач</h1>
+  <div id="guest-bar">
+    <button data-auth="login">Вход</button>
+    <button data-auth="register">Регистрация</button>
+  </div>
+  <div id="user-bar" hidden>
+    <span id="user-email"></span>
+    <button id="logout">Выйти</button>
+  </div>
+</header>
+
+<p id="welcome">Войдите или зарегистрируйтесь, чтобы вести список задач.</p>
+
+<main id="content" hidden>
+  <form id="add-form">
+    <div class="add-row">
+      <input id="new-title" maxlength="255" placeholder="Что нужно сделать?" required>
+      <button class="primary">Добавить</button>
+    </div>
+    <textarea id="new-desc" rows="2" maxlength="5000" placeholder="Описание (необязательно)" aria-label="Описание новой задачи"></textarea>
+  </form>
+  <p id="page-error" class="error" hidden></p>
+  <h2>Не сделано</h2>
+  <ul id="todo"></ul>
+  <h2>Сделано</h2>
+  <ul id="done"></ul>
+</main>
+
+<dialog id="auth-dialog">
+  <form id="auth-form">
+    <h3 id="auth-title"></h3>
+    <input id="email" type="email" placeholder="Email" maxlength="254" autocomplete="email" required>
+    <input id="password" type="password" placeholder="Пароль" maxlength="128" required>
+    <input id="password2" type="password" placeholder="Повторите пароль" maxlength="128" autocomplete="new-password" hidden>
+    <p id="auth-error" class="error" hidden></p>
+    <div class="row">
+      <button type="button" data-close>Отмена</button>
+      <button class="primary">Продолжить</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="task-dialog">
+  <h3>Задача</h3>
+  <input id="t-title" maxlength="255" aria-label="Заголовок">
+  <textarea id="t-desc" rows="6" maxlength="5000" placeholder="Описание" aria-label="Описание"></textarea>
+  <label class="check"><input id="t-done" type="checkbox"> Сделано</label>
+  <p id="task-error" class="error" hidden></p>
+  <div class="row">
+    <button id="t-delete" class="danger">Удалить</button>
+    <button data-close>Закрыть</button>
+  </div>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
