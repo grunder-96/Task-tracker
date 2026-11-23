@@ -4,4 +4,4 @@ spring:
       - kafka:19092
 
   datasource:
-    url: jdbc:postgresql://database:${DB_PORT}/${DB_NAME}
+    url: jdbc:postgresql://database:5432/${DB_NAME}
