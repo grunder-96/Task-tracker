@@ -1,6 +1,12 @@
 const $ = id => document.getElementById(id);
 let token = null, user = null, tasks = [], authMode = 'login';
-const timers = {};
+
+function toast(msg) {
+  const el = document.createElement('div');
+  el.className = 'toast'; el.textContent = msg;
+  $('toasts').append(el);
+  setTimeout(() => el.remove(), 2600);
+}
 
 const bearer = h => (h || '').replace(/^Bearer\s+/i, '');
 const show = (el, msg) => { el.textContent = msg || ''; el.hidden = !msg; };
@@ -49,20 +55,58 @@ function setUser(u) {
 }
 
 async function loadTasks() {
+  $('loading').hidden = false;
   try { tasks = await api('/tasks'); show($('page-error')); } catch (e) { show($('page-error'), e.message); }
+  $('loading').hidden = true;
   render();
 }
 
 function render() {
   for (const [id, done] of [['todo', false], ['done', true]]) {
-    const ul = $(id); ul.replaceChildren();
-    for (const t of tasks.filter(t => t.done === done)) {
+    const ul = $(id), list = tasks.filter(t => t.done === done);
+    ul.replaceChildren();
+    $(id + '-count').textContent = list.length;
+    $(id + '-empty').hidden = list.length > 0;
+    for (const t of list) {
       const li = document.createElement('li');
-      li.textContent = t.title;
+      const box = document.createElement('input');
+      box.type = 'checkbox'; box.checked = t.done; box.setAttribute('aria-label', 'Сделано');
+      box.onclick = e => e.stopPropagation();
+      box.onchange = () => toggle(t.id, box.checked);
+      const text = document.createElement('div'); text.className = 'text';
+      const title = document.createElement('span'); title.className = 'title'; title.textContent = t.title;
+      text.append(title);
+      const first = (t.description || '').split('\n')[0].trim();
+      if (first) { const d = document.createElement('span'); d.className = 'desc'; d.textContent = first; text.append(d); }
+      const del = document.createElement('button');
+      del.className = 'del'; del.textContent = '×'; del.title = 'Удалить'; del.setAttribute('aria-label', 'Удалить задачу');
+      del.onclick = e => {
+        e.stopPropagation();
+        if (del.classList.contains('armed')) return removeTask(t.id);
+        del.classList.add('armed'); del.textContent = 'Удалить?';
+        setTimeout(() => { del.classList.remove('armed'); del.textContent = '×'; }, 3000);
+      };
+      li.append(box, text, del);
       li.onclick = () => openTask(t);
       ul.append(li);
     }
   }
+}
+
+async function removeTask(id) {
+  try {
+    await api('/tasks/' + id, { method: 'DELETE' });
+    tasks = tasks.filter(t => t.id !== id); show($('page-error')); toast('Задача удалена');
+  } catch (err) { show($('page-error'), err.message); }
+  render();
+}
+
+async function toggle(id, done) {
+  try {
+    const updated = await api('/tasks/' + id, { method: 'PATCH', body: JSON.stringify({ done }) });
+    tasks = tasks.map(t => t.id === id ? updated : t); show($('page-error'));
+  } catch (err) { show($('page-error'), err.message); }
+  render();
 }
 
 // --- auth dialog
@@ -92,46 +136,59 @@ $('add-form').onsubmit = async e => {
   e.preventDefault();
   try {
     tasks.push(await api('/tasks', { method: 'POST', body: JSON.stringify({ title: $('new-title').value, description: $('new-desc').value }) }));
-    $('new-title').value = ''; $('new-desc').value = ''; show($('page-error')); render();
+    $('new-title').value = ''; $('new-desc').value = ''; show($('page-error')); render(); toast('Задача добавлена');
   } catch (err) { show($('page-error'), err.message); }
 };
 
-let currentId = null;
+let currentId = null, original = null;
 function openTask(t) {
-  currentId = t.id;
+  currentId = t.id; original = t;
   $('t-title').value = t.title; $('t-desc').value = t.description; $('t-done').checked = t.done;
-  show($('task-error')); $('task-dialog').showModal();
+  updateSaveState(); $('task-dialog').showModal();
 }
 
-async function save(id, patch) {
+function changes() {
+  const patch = {};
+  const title = $('t-title').value.trim();
+  if (title !== original.title) patch.title = title;
+  if ($('t-desc').value !== original.description) patch.description = $('t-desc').value;
+  if ($('t-done').checked !== original.done) patch.done = $('t-done').checked;
+  return patch;
+}
+
+function updateSaveState() {
+  const blank = !$('t-title').value.trim();
+  show($('task-error'), blank ? 'Заголовок не может быть пустым' : '');
+  $('t-save').disabled = blank || Object.keys(changes()).length === 0;
+}
+['t-title', 't-desc'].forEach(id => $(id).oninput = updateSaveState);
+$('t-done').onchange = updateSaveState;
+
+$('t-save').onclick = async () => {
   try {
-    const updated = await api('/tasks/' + id, { method: 'PATCH', body: JSON.stringify(patch) });
-    tasks = tasks.map(t => t.id === id ? updated : t);
-    show($('task-error')); render();
+    const updated = await api('/tasks/' + currentId, { method: 'PATCH', body: JSON.stringify(changes()) });
+    tasks = tasks.map(t => t.id === currentId ? updated : t);
+    $('task-dialog').close(); render(); toast('Изменения сохранены');
   } catch (err) { show($('task-error'), err.message); }
-}
-
-function autosave(input, field) {
-  input.oninput = () => {
-    const id = currentId;
-    clearTimeout(timers[field]);
-    if (field === 'title' && !input.value.trim()) return show($('task-error'), 'Заголовок не может быть пустым');
-    show($('task-error'));
-    timers[field] = setTimeout(() => save(id, { [field]: input.value }), 600);
-  };
-}
-autosave($('t-title'), 'title');
-autosave($('t-desc'), 'description');
-$('t-done').onchange = () => save(currentId, { done: $('t-done').checked });
+};
 $('t-delete').onclick = async () => {
   try {
     await api('/tasks/' + currentId, { method: 'DELETE' });
     tasks = tasks.filter(t => t.id !== currentId);
-    $('task-dialog').close(); render();
+    $('task-dialog').close(); render(); toast('Задача удалена');
   } catch (err) { show($('task-error'), err.message); }
 };
 
-document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => b.closest('dialog').close());
+const isDirty = () => Object.keys(changes()).length > 0;
+function requestCloseTask() { if (isDirty()) $('confirm-dialog').showModal(); else $('task-dialog').close(); }
+$('task-dialog').addEventListener('cancel', e => { if (isDirty()) { e.preventDefault(); $('confirm-dialog').showModal(); } });
+$('confirm-stay').onclick = () => $('confirm-dialog').close();
+$('confirm-discard').onclick = () => { $('confirm-dialog').close(); $('task-dialog').close(); };
+
+document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => {
+  const d = b.closest('dialog');
+  if (d.id === 'task-dialog') requestCloseTask(); else d.close();
+});
 
 // --- start: restore the session from the refresh cookie
 refresh().then(() => api('/user')).then(setUser).catch(() => setUser(null));
