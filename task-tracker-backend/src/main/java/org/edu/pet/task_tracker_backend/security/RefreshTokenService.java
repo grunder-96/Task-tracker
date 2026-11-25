@@ -50,7 +50,7 @@ public class RefreshTokenService {
 
     // get userId and revoke current token
     @Transactional(noRollbackFor = InvalidRefreshTokenException.class)
-    public Long getUserId(String rawToken) {
+    public Long consumeAndGetUserId(String rawToken) {
 
         if (rawToken == null || rawToken.isBlank()) {
             throw new InvalidRefreshTokenException("Refresh token must not be null or empty");

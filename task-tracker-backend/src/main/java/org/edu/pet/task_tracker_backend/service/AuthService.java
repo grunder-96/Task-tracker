@@ -46,7 +46,7 @@ public class AuthService {
 
     public AuthTokensResponse refresh(String rawRefreshToken) {
 
-        Long userId = refreshTokenService.getUserId(rawRefreshToken);
+        Long userId = refreshTokenService.consumeAndGetUserId(rawRefreshToken);
 
         UserInfoResponse userInfoResponse = userService.getUserInfo(userId);
 
