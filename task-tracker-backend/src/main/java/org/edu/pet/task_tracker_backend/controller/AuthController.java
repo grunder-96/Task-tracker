@@ -23,8 +23,9 @@ public class AuthController {
     private final RefreshCookieFactory refreshCookieFactory;
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody @Valid LoginRequest loginRequest) {
-        return authResponseFactory.ok(authService.login(loginRequest));
+    public ResponseEntity<Void> login(@RequestBody @Valid LoginRequest loginRequest,
+                                      @CookieValue(name = RefreshCookieFactory.COOKIE_NAME, required = false) String rawRefreshToken) {
+        return authResponseFactory.ok(authService.login(loginRequest, rawRefreshToken));
     }
 
     @PostMapping("/refresh")

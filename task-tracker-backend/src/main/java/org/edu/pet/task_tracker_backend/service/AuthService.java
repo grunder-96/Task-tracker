@@ -34,12 +34,14 @@ public class AuthService {
         return prepareTokensResponse(userInfoResponse.id(), userInfoResponse.email());
     }
 
-    public AuthTokensResponse login(LoginRequest loginRequest) {
+    public AuthTokensResponse login(LoginRequest loginRequest, String rawRefreshToken) {
 
         Authentication authenticate = authenticationManager.authenticate(UsernamePasswordAuthenticationToken
                 .unauthenticated(loginRequest.email(), loginRequest.password()));
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authenticate.getPrincipal();
+
+        refreshTokenService.revoke(rawRefreshToken);
 
         return prepareTokensResponse(customUserDetails.getId(), customUserDetails.getUsername());
     }
